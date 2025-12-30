@@ -162,7 +162,7 @@ void fixGaps(){
                 }
                 else{
                     if(i+1<dbSize){
-                        if(database[i+1] != NULL){
+                        if(database[i+1][0] != NULL){
                             database[i][j]=database[i+1][0];
                             database[i+1][0] =NULL;
                             j--;
