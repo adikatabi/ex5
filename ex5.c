@@ -261,7 +261,7 @@ void addShow(){
     printf("Enter the name of the show:\n");
     char *ptrNewShow = getString();
     if(findShow(ptrNewShow) != NULL){
-        printf("Show already exist.");
+        printf("Show already exists.");
         free(ptrNewShow);
         return;//back to main menu
     }
@@ -322,14 +322,13 @@ void moveArr(int iRow, int jCol){
                     }
                     database[i][j] = NULL;
                 }
-                if(i == iRow && j==jCol){
+            }
+            if(i == iRow && j==jCol){
                 return;
             }
-         }
-        }
-
         }
     }
+}
 
 void addNewSeason(TVShow *nameOfShow, char *seasonName, int pos);
 
@@ -346,7 +345,7 @@ void addSeason(){
      char *seasonName = getString();
      Season *newSeason = findSeason(nameOfShow, seasonName);
      if(newSeason != NULL){
-        printf("Season already exist.\n");
+        printf("Season already exists.\n");
         free(seasonName);
         free(name);
         return;
@@ -410,7 +409,7 @@ void addEpisode(){
     char *episodeName = getString();
     Episode *nameOfEpisode = findEpisode(nameOfSeaseon, episodeName);
     if(nameOfEpisode != NULL){
-        printf("Episode already exist.\n");
+        printf("Episode already exists.\n");
         free(episodeName);
         free(seasonName);
         free(name);
@@ -610,7 +609,7 @@ void deleteEpisode(){
     char *episodeName = getString();
     Episode *nameOfEpisode = findEpisode(nameOfSeason, episodeName);
     if(nameOfEpisode == NULL){
-        printf("Episode not found.");
+        printf("Episode not found.\n");
         free(episodeName);
         free(seasonName);
         free(showName);
