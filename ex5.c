@@ -124,14 +124,14 @@ void shrinkDB();
 void expandDB();
 
 void expandDB(){
-    dbSize++;
+    
     //to do: temp
     TVShow ***temp = (TVShow ***)realloc(database,dbSize*sizeof(TVShow **));
     if(temp == NULL){
         return;
     }
-
     database = temp;
+    dbSize++;
     for(int i=0;i<dbSize -1;i++){
         TVShow **tempTry = (TVShow **)realloc(database[i], dbSize * sizeof(TVShow *));
         if(tempTry != NULL){
@@ -271,6 +271,7 @@ void addShow(){
 void initDataBase(char *ptrNewShow){
     TVShow *newShow =  (TVShow *)malloc(sizeof(TVShow));
     if(newShow == NULL){
+        free(ptrNewShow);
         return;
     }
     newShow->name= ptrNewShow;
@@ -362,6 +363,7 @@ void addSeason(){
 void addNewSeason(TVShow *nameOfShow, char *seasonName, int pos){
     Season *newSeason = (Season *)malloc(sizeof(Season));
     if(newSeason == NULL){
+        free(seasonName);
         return;
     }
     newSeason->name = seasonName;
@@ -426,11 +428,15 @@ void addEpisode(){
     scanf("%d", &pos);
     while(getchar() != '\n');
     addNewEpisode(nameOfSeaseon, episodeName, length, pos);
+    free(seasonName);
+    free(name);
 }
 
 void addNewEpisode(Season *nameOfSeason, char *episodeName, char *length, int pos){
     Episode *newEpisode = (Episode *)malloc(sizeof(Episode));
     if(newEpisode == NULL){
+        free(episodeName);
+        free(length);
         return;
     }
     newEpisode->name = episodeName;
@@ -463,6 +469,9 @@ void moveArrBackwards(int iRow, int jCol);
 void deleteShow(){
     printf("Enter the name of the show:\n");
     char *ptrDelShow = getString();
+    if(ptrDelShow == NULL){
+        return;
+    }
     TVShow *toDel = findShow(ptrDelShow);
     if(toDel == NULL){
         printf("Show not found.\n");
@@ -470,10 +479,12 @@ void deleteShow(){
         return;
     }
     position index = getIndex(toDel);
-    moveArrBackwards(index.iRow, index.jCol);
-    freeShow(toDel);
-    if(countShows() <= (dbSize- 1)*(dbSize-1)){
+    if(index.iRow != -1){
+        moveArrBackwards(index.iRow, index.jCol);
+        freeShow(toDel);
+    if(dbSize>1 && countShows() <= (dbSize- 1)*(dbSize-1)){
         shrinkDB();
+    }
     }
     free(ptrDelShow);
 }
@@ -542,6 +553,8 @@ void deleteSeason(){
         return;
     }
     ToDelSeason(nameOfShow, seasonName);
+    free(seasonName);
+    free(name);
 }
 
 void ToDelSeason(TVShow *nameOfShow, char *seasonName){
@@ -601,6 +614,7 @@ void deleteEpisode(){
         free(episodeName);
         free(seasonName);
         free(showName);
+        return;
     }
     toDelEpisode(nameOfSeason, episodeName);
     free(episodeName);
