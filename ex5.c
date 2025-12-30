@@ -40,7 +40,7 @@ char *getString(){
     int oneChar;
     int countChar = 0;
     oneChar = getchar();
-    if(oneChar == '\n' || oneChar == ' '){
+    while(oneChar == '\n' || oneChar == ' '){
         oneChar = getchar();
     }
     while(oneChar != '\n'){
@@ -310,9 +310,6 @@ void moveArr(int iRow, int jCol){
     //int i = 0;
     for(int i = dbSize-1; i>=iRow ;i--){
         for(int j= dbSize-1; j>=0; j--){
-            if(i == iRow && j==jCol-1){
-                return;
-            }
             if(database[i][j]!=NULL){
                 if(j+1 <dbSize){
                     database[i][j+1] = database[i][j];
@@ -323,15 +320,13 @@ void moveArr(int iRow, int jCol){
                         database[i+1][0]= database[i][j];
                     }
                     database[i][j] = NULL;
-                } 
+                }
+                if(i == iRow && j==jCol){
+                return;
+            }
          }
         }
-            /*if(database[i][j] != NULL){
-                if(j+1 < dbSize){
-                    database[i][j+1] = database[i][j];
-                }
-                else database[i+1][dbSize-1] = database[i][j];  
-            }*/
+
         }
     }
 
@@ -346,7 +341,7 @@ void addSeason(){
         free(name);
         return;
      }
-     printf("Enter rhe name of the season:\n");
+     printf("Enter the name of the season:\n");
      char *seasonName = getString();
      Season *newSeason = findSeason(nameOfShow, seasonName);
      if(newSeason != NULL){
