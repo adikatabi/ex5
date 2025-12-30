@@ -122,6 +122,7 @@ int validLength(char *s){
 
 void shrinkDB();
 void expandDB();
+void fixGaps();
 
 void expandDB(){
     
@@ -144,7 +145,38 @@ void expandDB(){
     for(int i=0; i<dbSize; i++){
         database[dbSize - 1][i]= NULL;
     }
+    fixGaps();
     //database = (TVShow ***)realloc(database, dbSize*dbSize*sizeof(TVShow **));
+}
+
+void fixGaps(){
+    for(int i=0;i<dbSize;i++){
+        for(int j=0;j<dbSize;j++){
+            if(database[i][j] == NULL){
+                if(j+1<dbSize){
+                    if(database[i][j+1] != NULL){
+                        database[i][j] = database[i][j+1];
+                        database[i][j+1] = NULL;
+                        j--;//to check if the next is also a NULL
+                    }
+                }
+                else{
+                    if(i+1<dbSize){
+                        if(database[i+1] != NULL){
+                            database[i][j]=database[i+1][0];
+                            database[i+1][0] =NULL;
+                            j--;
+                        }
+                        else{
+                            return;
+                        }
+
+                    }
+                }
+            }
+
+        }
+    }
 }
 
 void shrinkDB(){
@@ -261,7 +293,7 @@ void addShow(){
     printf("Enter the name of the show:\n");
     char *ptrNewShow = getString();
     if(findShow(ptrNewShow) != NULL){
-        printf("Show already exists.");
+        printf("Show already exists.\n");
         free(ptrNewShow);
         return;//back to main menu
     }
@@ -283,10 +315,11 @@ void initDataBase(char *ptrNewShow){
 }
 
 void inOrder(TVShow *newShow){
-    int freeRow = -1, freeCol = -1;
+    int freeRow = -1, freeCol = -1, countTvShows = 0;
     for(int i = 0; i<dbSize; i++){
         for(int j = 0; j<dbSize; j++){
             if(database[i][j]!= NULL){
+                countTvShows++;
                 if(strcmp(newShow->name,database[i][j]->name) < 0){
                     moveArr(i, j);
                     database[i][j] = newShow;
@@ -294,7 +327,7 @@ void inOrder(TVShow *newShow){
                 }
             }
             else{
-                if(freeRow == -1 && freeCol ==-1){
+                if(freeRow == -1 && freeCol ==-1 && countTvShows == countShows()){
                     freeRow = i;
                     freeCol = j;
                 }
@@ -351,7 +384,7 @@ void addSeason(){
         return;
      }
      int pos;
-     printf("Enter the position: \n");
+     printf("Enter the position:\n");
      scanf("%d", &pos);
      while(getchar() != '\n');
      addNewSeason(nameOfShow, seasonName, pos);
@@ -592,7 +625,7 @@ void deleteEpisode(){
     char *showName = getString();
     TVShow *nameOfShow = findShow(showName);
     if(nameOfShow == NULL){
-        printf("Show not found.");
+        printf("Show not found.\n");
         free(showName);
         return;
     }
@@ -600,7 +633,7 @@ void deleteEpisode(){
     char *seasonName = getString();
     Season *nameOfSeason = findSeason(nameOfShow, seasonName);
     if(nameOfSeason ==  NULL){
-        printf("Season not found.");
+        printf("Season not found.\n");
         free(seasonName);
         free(showName);
         return;
