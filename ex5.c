@@ -551,10 +551,10 @@ void ToDelSeason(TVShow *nameOfShow, char *seasonName){
     }
     //if it's the first season
     if(strcmp(currentSeason->name,seasonName) == 0){
-        Season *temp = currentSeason->next;
-        freeSeason(currentSeason);
-        currentSeason = temp;
-        nameOfShow->seasons = currentSeason;
+        Season *toDelete = currentSeason;
+        nameOfShow->seasons = toDelete->next;
+        toDelete->next = NULL;
+        freeSeason(toDelete);
         return;
     }
     
@@ -562,6 +562,7 @@ void ToDelSeason(TVShow *nameOfShow, char *seasonName){
         if((strcmp(currentSeason->next->name, seasonName) == 0)){
             Season *temp = currentSeason->next;
             currentSeason->next = temp->next;
+            temp->next = NULL;
             freeSeason(temp);
             return;
         }
@@ -608,24 +609,26 @@ void deleteEpisode(){
 }
 
 void toDelEpisode(Season *nameOfSeason, char *episodeName){
-    Episode *currentEpisdoe = nameOfSeason->episodes;
-    if(currentEpisdoe == NULL){
+    Episode *currentEpisode = nameOfSeason->episodes;
+    if(currentEpisode == NULL){
         return;
     }
-    if(strcmp(currentEpisdoe->name, episodeName) == 0){
-        nameOfSeason->episodes = currentEpisdoe->next;
-        freeEpisode(currentEpisdoe);
-        //currentEpisdoe = nameOfSeason->episodes;
+    if(strcmp(currentEpisode->name, episodeName) == 0){
+        nameOfSeason->episodes = currentEpisode->next;
+        currentEpisode->next = NULL;
+        freeEpisode(currentEpisode);
+        //currentEpisode = nameOfSeason->episodes;
         return;
     }
-    while(currentEpisdoe->next != NULL) {
-        if(strcmp(currentEpisdoe->next->name, episodeName) == 0){
-            Episode *temp = currentEpisdoe->next->next;
-            freeEpisode(currentEpisdoe->next);
-            currentEpisdoe->next = temp;
+    while(currentEpisode->next != NULL) {
+        if(strcmp(currentEpisode->next->name, episodeName) == 0){
+            Episode *temp = currentEpisode->next->next;
+            currentEpisode->next->next=NULL;
+            freeEpisode(currentEpisode->next);
+            currentEpisode->next = temp;
             return;
         }
-        currentEpisdoe = currentEpisdoe->next;
+        currentEpisode = currentEpisode->next;
     }
     
     
