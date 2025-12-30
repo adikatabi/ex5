@@ -126,7 +126,7 @@ void expandDB();
 void expandDB(){
     
     //to do: temp
-    TVShow ***temp = (TVShow ***)realloc(database,dbSize*sizeof(TVShow **));
+    TVShow ***temp = (TVShow ***)realloc(database,(dbSize+1)*sizeof(TVShow **));
     if(temp == NULL){
         return;
     }
