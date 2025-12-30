@@ -456,7 +456,7 @@ void addNewEpisode(Season *nameOfSeason, char *episodeName, char *length, int po
 }
 void deleteShow();
 position getIndex(TVShow *show);
-void moveArrBackwards(TVShow *toDel, int iRow, int jCol);
+void moveArrBackwards(int iRow, int jCol);
 
 
 
@@ -470,7 +470,7 @@ void deleteShow(){
         return;
     }
     position index = getIndex(toDel);
-    moveArrBackwards(toDel, index.iRow, index.jCol);
+    moveArrBackwards(index.iRow, index.jCol);
     freeShow(toDel);
     if(countShows() <= (dbSize- 1)*(dbSize-1)){
         shrinkDB();
@@ -494,9 +494,10 @@ position getIndex(TVShow *show){
             }
         }
     }
+    return indexes;
 }
 
-void moveArrBackwards(TVShow *toDel, int iRow, int jCol){
+void moveArrBackwards(int iRow, int jCol){
     database[iRow][jCol] = NULL;
     for(int i= iRow; i<dbSize; i++){
         //to start in the deleted cell and not to delete the cells befor it
